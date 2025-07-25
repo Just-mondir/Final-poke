@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Price Automation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .file-upload input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-upload-label {
+            display: block;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .file-upload-label:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .file-upload-label.has-file {
+            background: #667eea;
+            color: white;
+            border-style: solid;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e1e5e9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Price Automation</h1>
+            <p>Automate price fetching for your Google Sheets</p>
+        </div>
+        
+        <form id="automationForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="jsonFile">📄 Google Service Account JSON File</label>
+                <div class="file-upload">
+                    <input type="file" id="jsonFile" name="json_file" accept=".json" required>
+                    <label for="jsonFile" class="file-upload-label" id="fileLabel">
+                        Click to select your JSON credentials file
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="sheetName">📋 Google Sheet Name</label>
+                <input type="text" id="sheetName" name="sheet_name" placeholder="Enter your Google Sheet name" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="runBtn">
+                🚀 Start Automation
+            </button>
+            
+            <button type="button" class="btn btn-danger" id="stopBtn" style="display: none;">
+                🛑 Stop Automation
+            </button>
+            
+            <a href="/guide" class="btn btn-secondary">
+                ❓ How to Get Started
+            </a>
+        </form>
+        
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 0 rows processed</div>
+        </div>
+        
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('automationForm');
+        const runBtn = document.getElementById('runBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const statusMessage = document.getElementById('statusMessage');
+        const fileInput = document.getElementById('jsonFile');
+        const fileLabel = document.getElementById('fileLabel');
+        
+        // File upload handling
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                fileLabel.textContent = `Selected: ${this.files[0].name}`;
+                fileLabel.classList.add('has-file');
+            } else {
+                fileLabel.textContent = 'Click to select your JSON credentials file';
+                fileLabel.classList.remove('has-file');
+            }
+        });
+        
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            
+            try {
+                runBtn.disabled = true;
+                runBtn.textContent = '🔄 Starting...';
+                statusMessage.innerHTML = '';
+                
+                const response = await fetch('/run', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    progressContainer.style.display = 'block';
+                    runBtn.style.display = 'none';
+                    stopBtn.style.display = 'block';
+                    startProgressPolling();
+                } else {
+                    showStatus(result.error, 'error');
+                    runBtn.disabled = false;
+                    runBtn.textContent = '🚀 Start Automation';
+                }
+            } catch (error) {
+                showStatus('Network error: ' + error.message, 'error');
+                runBtn.disabled = false;
+                runBtn.textContent = '🚀 Start Automation';
+            }
+        });
+        
+        // Stop button functionality
+        stopBtn.addEventListener('click', async function() {
+            try {
+                stopBtn.disabled = true;
+                stopBtn.textContent = '🔄 Stopping...';
+                
+                const response = await fetch('/stop', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showStatus('Stop signal sent. Automation will stop after current row.', 'info');
+                } else {
+                    showStatus(result.error, 'error');
+                    stopBtn.disabled = false;
+                    stopBtn.textContent = '🛑 Stop Automation';
+                }
+            } catch (error) {
+                showStatus('Failed to stop automation: ' + error.message, 'error');
+                stopBtn.disabled = false;
+                stopBtn.textContent = '🛑 Stop Automation';
+            }
+        });
+        
+        function startProgressPolling() {
+            const pollInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/status');
+                    const status = await response.json();
+                    
+                    updateProgress(status);
+                    
+                    if (!status.running) {
+                        clearInterval(pollInterval);
+                        runBtn.disabled = false;
+                        runBtn.textContent = '🚀 Start Automation';
+                        runBtn.style.display = 'block';
+                        stopBtn.style.display = 'none';
+                        stopBtn.disabled = false;
+                        stopBtn.textContent = '🛑 Stop Automation';
+                        
+                        if (status.error) {
+                            showStatus(status.error, 'error');
+                        } else {
+                            showStatus(status.message, 'success');
+                        }
+                    }
+                } catch (error) {
+                    clearInterval(pollInterval);
+                    showStatus('Failed to get status: ' + error.message, 'error');
+                    runBtn.disabled = false;
+                    runBtn.textContent = '🚀 Start Automation';
+                    runBtn.style.display = 'block';
+                    stopBtn.style.display = 'none';
+                    stopBtn.disabled = false;
+                    stopBtn.textContent = '🛑 Stop Automation';
+                }
+            }, 1000);
+        }
+        
+        function updateProgress(status) {
+            const percentage = status.total > 0 ? (status.progress / status.total) * 100 : 0;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${status.progress} / ${status.total} rows processed`;
+            
+            if (status.message) {
+                showStatus(status.message, 'info');
+            }
+        }
+        
+        function showStatus(message, type) {
+            statusMessage.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+        }
+    </script>
+</body>
+</html>

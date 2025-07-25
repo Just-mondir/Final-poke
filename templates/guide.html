@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Get Started - Price Automation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .step {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .step h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .step p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .step ul {
+            margin-left: 20px;
+            color: #555;
+        }
+        
+        .step li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+        }
+        
+        .warning strong {
+            color: #d63031;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .image-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #6c757d;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            color: #6c757d;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .step {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 How to Get Started</h1>
+            <p>Follow these steps to set up your Google Sheets automation</p>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">1</span>Create a Google Cloud Project</h3>
+            <p>First, you need to create a Google Cloud project and enable the necessary APIs:</p>
+            <ul>
+                <li>Go to the <strong>Google Cloud Console</strong> (console.cloud.google.com)</li>
+                <li>Create a new project or select an existing one</li>
+                <li>Enable the <strong>Google Sheets API</strong> and <strong>Google Drive API</strong></li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">2</span>Create a Service Account</h3>
+            <p>Create credentials that will allow the automation to access your Google Sheets:</p>
+            <ul>
+                <li>In the Google Cloud Console, go to <strong>IAM & Admin → Service Accounts</strong></li>
+                <li>Click <strong>"Create Service Account"</strong></li>
+                <li>Give it a name like "sheets-automation"</li>
+                <li>Skip the optional steps and click <strong>"Done"</strong></li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">3</span>Generate JSON Credentials</h3>
+            <p>Download the credentials file that the automation will use:</p>
+            <ul>
+                <li>Click on your newly created service account</li>
+                <li>Go to the <strong>"Keys"</strong> tab</li>
+                <li>Click <strong>"Add Key" → "Create new key"</strong></li>
+                <li>Select <strong>"JSON"</strong> format</li>
+                <li>The JSON file will be automatically downloaded</li>
+            </ul>
+            
+            <div class="warning">
+                <strong>⚠️ Important:</strong> Keep this JSON file secure! It contains credentials that can access your Google services. Never share it publicly or commit it to version control.
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">4</span>Share Your Google Sheet</h3>
+            <p>Give the service account access to your Google Sheet:</p>
+            <ul>
+                <li>Open your JSON credentials file and find the <strong>"client_email"</strong> field</li>
+                <li>Copy the email address (it looks like: your-service@project-name.iam.gserviceaccount.com)</li>
+                <li>Open your Google Sheet</li>
+                <li>Click <strong>"Share"</strong> in the top-right corner</li>
+                <li>Paste the service account email</li>
+                <li>Set permissions to <strong>"Editor"</strong></li>
+                <li>Click <strong>"Send"</strong> (you may see a warning that it can't send email - that's fine)</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">5</span>Prepare Your Sheet Structure</h3>
+            <p>Make sure your Google Sheet has the correct structure:</p>
+            <ul>
+                <li><strong>Column F (6):</strong> URLs to scrape</li>
+                <li><strong>Column G (7):</strong> Grader name (e.g., "PSA", "BGS")</li>
+                <li><strong>Column H (8):</strong> Grade (e.g., "10", "9.5")</li>
+                <li><strong>Columns L-O (12-15):</strong> Will be filled with individual prices</li>
+                <li><strong>Column P (16):</strong> Will be filled with the average price</li>
+                <li><strong>Starting row:</strong> Data should start from row 9</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">6</span>Upload and Run</h3>
+            <p>Now you're ready to use the automation:</p>
+            <ul>
+                <li>Go back to the main page</li>
+                <li>Upload your JSON credentials file</li>
+                <li>Enter your Google Sheet name (exact name as shown in Google Sheets)</li>
+                <li>Click <strong>"Start Automation"</strong></li>
+                <li>Monitor the progress in real-time</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">7</span>Troubleshooting</h3>
+            <p>If you encounter issues, check these common problems:</p>
+            <ul>
+                <li><strong>Permission denied:</strong> Make sure you shared the sheet with the service account email</li>
+                <li><strong>Sheet not found:</strong> Double-check the sheet name spelling</li>
+                <li><strong>Invalid JSON:</strong> Ensure you downloaded the correct credentials file</li>
+                <li><strong>No data found:</strong> Verify your sheet has data in the correct columns</li>
+            </ul>
+        </div>
+        
+        <a href="/" class="btn">← Back to Automation</a>
+    </div>
+</body>
+</html>
