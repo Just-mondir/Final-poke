@@ -198,7 +198,7 @@ def run_automation(json_path, sheet_name):
         client = gspread.authorize(creds)
         sheet = client.open(sheet_name).sheet1
 
-        start_row = 3
+        start_row = 2
         all_values = sheet.get_all_values()
         num_rows = len(all_values)
         
@@ -262,4 +262,6 @@ def run_automation(json_path, sheet_name):
             pass
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    port = int(os.environ.get('PORT', 5000))
+    print(f"🚀 Starting Flask app on port {port}")
+    app.run(host='0.0.0.0', port=port, debug=False)
