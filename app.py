@@ -236,8 +236,8 @@ def run_automation(json_path, sheet_name):
 
                 if prices:
                     for i, price in enumerate(prices[:4]):
-                        sheet.update_cell(row, 12 + i, price)
-                    sheet.update_cell(row, 16, avg)
+                        sheet.update_cell(row+1, 12 + i, price)
+                    sheet.update_cell(row+1, 16, avg)
                     print(f"✅ Updated row {row} with prices and average.")
                 else:
                     print(f"❌ No prices found for row {row}. Skipping update.")
