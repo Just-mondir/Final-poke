@@ -216,8 +216,8 @@ def run_automation(json_path, sheet_name):
             
             try:
                 url = sheet.cell(row, 6).value
-                grader = sheet.cell(row, 7).value
-                fake_grade = sheet.cell(row, 8).value
+                grader = sheet.cell(row+1, 7).value
+                fake_grade = sheet.cell(row+1, 8).value
                 
                 if not url or not grader or not fake_grade:
                     print(f"⚠️ Skipping row {row}: Missing required data")
