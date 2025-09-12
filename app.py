@@ -216,8 +216,8 @@ def run_automation(json_path, sheet_name):
             
             try:
                 url = sheet.cell(row, 6).value
-                grader = sheet.cell(row+1, 7).value
-                fake_grade = sheet.cell(row+1, 8).value
+                grader = sheet.cell(row, 7).value
+                fake_grade = sheet.cell(row, 8).value
                 
                 if not url or not grader or not fake_grade:
                     print(f"⚠️ Skipping row {row}: Missing required data")
@@ -236,8 +236,8 @@ def run_automation(json_path, sheet_name):
 
                 if prices:
                     for i, price in enumerate(prices[:4]):
-                        sheet.update_cell(row+1, 12 + i, price)
-                    sheet.update_cell(row+1, 16, avg)
+                        sheet.update_cell(row, 12 + i, price)
+                    sheet.update_cell(row, 16, avg)
                     print(f"✅ Updated row {row} with prices and average.")
                 else:
                     print(f"❌ No prices found for row {row}. Skipping update.")
@@ -265,3 +265,4 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print(f"🚀 Starting Flask app on port {port}")
     app.run(host='0.0.0.0', port=port, debug=False)
+    
