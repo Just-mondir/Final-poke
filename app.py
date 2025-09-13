@@ -198,7 +198,7 @@ def run_automation(json_path, sheet_name):
         client = gspread.authorize(creds)
         sheet = client.open(sheet_name).sheet1
 
-        start_row = 2
+        start_row = 369
         all_values = sheet.get_all_values()
         num_rows = len(all_values)
         
